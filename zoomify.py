@@ -1,27 +1,47 @@
+import argparse
 from datetime import datetime
 import time
 import subprocess
+import sys
 import platform
+""" Takes two arguments: user's desired class hour, and the class URL.
+Checks every 30 mins if the current hour == requested hour, and opens their
+class, method being dependent on which operating system they're using."""
+flag = True
 
 
-def main():
-    requested_hour = input("What time do you want to join your class (24hr): ")
-    requested_class = input("What class do you want to join? Zoom URL: ")
-    current_hour = datetime.now().strftime("%H")
+def create_parser():
+    parse = argparse.ArgumentParser(
+        description="Opens the user's class via URL at the specified hour"
+    )
+    parse.add_argument(
+        "hour",
+        help="Requested hour (24hr format) 0:00, 01:30, etc")
+    parse.add_argument("URL", help="Class URL, e.g. https://zoom.us/j/1234567")
+    return parse
+
+
+def main(args):
+    current_hour = datetime.now().strftime("%H:%M")
     operating_system = platform.system()
-    while True:
-        if requested_hour == current_hour:
+    parser = create_parser()
+    user_info = parser.parse_args(args)
+
+    global flag
+    while flag:
+        if user_info.hour == current_hour:
             if operating_system == "Darwin":
-                subprocess.run(["open", requested_class])
-                print(f"It's now {requested_hour}! Opening Zoom class...")
+                subprocess.run(["open", user_info.URL])
+                print(f"It's now {user_info.hour}! Opening class...")
             elif operating_system == "Linux":
-                subprocess.run(["xdg-open", requested_class])
-                print(f"It's now {requested_hour}! Opening Zoom class...")
+                subprocess.run(["xdg-open", user_info.URL])
+                print(f"It's now {user_info.hour}! Opening class...")
             elif operating_system == "Windows":
-                subprocess.run(["start", requested_class])
-                print(f"It's now {requested_hour}! Opening Zoom class...")
-        time.sleep(3600)
+                subprocess.run(["start", user_info.URL])
+                print(f"It's now {user_info.hour}! Opening class...")
+            flag = False
+        time.sleep(1800)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
