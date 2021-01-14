@@ -30,15 +30,13 @@ def main(args):
     global flag
     while flag:
         if user_info.hour == current_hour:
+            print(f"It's now {user_info.hour}! Opening class...")
             if operating_system == "Darwin":
                 subprocess.run(["open", user_info.URL])
-                print(f"It's now {user_info.hour}! Opening class...")
             elif operating_system == "Linux":
                 subprocess.run(["xdg-open", user_info.URL])
-                print(f"It's now {user_info.hour}! Opening class...")
             elif operating_system == "Windows":
                 subprocess.run(["start", user_info.URL])
-                print(f"It's now {user_info.hour}! Opening class...")
             flag = False
         time.sleep(1800)
 
