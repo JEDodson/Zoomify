@@ -36,7 +36,8 @@ def main(args):
             elif operating_system == "Linux":
                 subprocess.run(["xdg-open", user_info.URL])
             elif operating_system == "Windows":
-                subprocess.run(["start", user_info.URL])
+                zoom_exe = "%APPDATA%\\Zoom\\bin\\Zoom.exe"
+                subprocess.run([zoom_exe, f"--url=zoommtg://{user_info.URL}"])
             flag = False
         time.sleep(1800)
 
